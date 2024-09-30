@@ -1,0 +1,19 @@
+Chat Models
+The LangChain wrappers also allow these models to take a string as input. This means you can easily use chat models in place of LLMs.
+When a string is passed in as input, it is converted to a HumanMessage and then passed to the underlying model.
+LangChain does not host any Chat Models, rather we rely on third party integrations.
+
+Chat History
+The concept of ChatHistory refers to a class in LangChain which can be used to wrap an arbitrary chain. This ChatHistory will keep track of inputs and outputs of the underlying chain, and append them as messages to a message database. Future interactions will then load those messages and pass them into the chain as part of the input.
+
+Embedding Models
+Embedding models create a vector representation of a piece of text. You can think of a vector as an array of numbers that captures the semantic meaning of the text. By representing the text in this way, you can perform mathematical operations that allow you to do things like search for other pieces of text that are most similar in meaning.
+The base Embeddings class in LangChain provides two methods: one for embedding documents and one for embedding a query. The former takes as input multiple texts, while the latter takes a single text. The reason for having these as two separate methods is that some embedding providers have different embedding methods for documents (to be searched over) vs queries (the search query itself).
+
+Vector Stores
+A vector store takes care of storing embedded data and performing vector search for you.
+Most vector stores can also store metadata about embedded vectors and support filtering on that metadata before similarity search, allowing you more control over returned documents.
+
+Agents
+By themselves, language models can't take actions - they just output text. A big use case for LangChain is creating agents. Agents are systems that use an LLM as a reasoning engine to determine which actions to take and what the inputs to those actions should be. The results of those actions can then be fed back into the agent and it determine whether more actions are needed, or whether it is okay to finish.
+LangGraph is an extension of LangChain specifically aimed at creating highly controllable and customizable agents

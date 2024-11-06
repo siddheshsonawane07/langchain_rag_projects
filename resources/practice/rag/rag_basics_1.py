@@ -1,18 +1,20 @@
 import os
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_mistralai import MistralAIEmbeddings
 from dotenv import load_dotenv
+import pickle
+import faiss
 
 load_dotenv()
 current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, "books", "odyssey.txt")
-persistent_directory = os.path.join(current_dir, "db", "chroma_db")
+faiss_index_path = os.path.join(current_dir, "db", "faiss_index.idx")
 
-# Check if the Chroma vector store already exists
-if not os.path.exists(persistent_directory):
-    print("Persistent directory does not exist. Initializing vector store...")
+# Check if the FAISS index file already exists
+if not os.path.exists(faiss_index_path):
+    print("FAISS index does not exist. Initializing vector store...")
 
     # Ensure the text file exists
     if not os.path.exists(file_path):
@@ -33,15 +35,11 @@ if not os.path.exists(persistent_directory):
     print(f"Sample chunk:\n{docs[0].page_content}\n")
 
     print("\n--- Creating embeddings ---")
-    embeddings = MistralAIEmbeddings(
-        model="mistral-embed"    )
+    embeddings = MistralAIEmbeddings(model="mistral-embed")
     print("\n--- Finished creating embeddings ---")
 
-    # Create the vector store and persist it automatically
-    print("\n--- Creating vector store ---")
-    db = Chroma.from_documents(
-        docs, embeddings, persist_directory=persistent_directory)
-    print("\n--- Finished creating vector store ---")
-
-else:
-    print("Vector store already exists. No need to initialize.")
+    # Create the FAISS vector store
+    print("\n--- Creating FAISS vector store ---")
+    db = FAISS.from_documents(docs, embeddings)
+    
+    db.save_local("faiss-index")

@@ -1,30 +1,23 @@
 import os
 from dotenv import load_dotenv
-from langchain_community.vectorstores import Chroma
+import faiss
 from langchain_mistralai import MistralAIEmbeddings
+from langchain_community.vectorstores import FAISS
 
 load_dotenv()
-# Define the persistent directory
-current_dir = os.path.dirname(os.path.abspath(__file__))
-persistent_directory = os.path.join(current_dir, "db", "chroma_db")
 
-# Define the embedding model
-embeddings = MistralAIEmbeddings(
-    model="mistral-embed")
+# Load the embedding model
+embeddings = MistralAIEmbeddings(model="mistral-embed")
 
-# Load the existing vector store with the embedding function
-db = Chroma(persist_directory=persistent_directory,
-            embedding_function=embeddings)
+# Load the existing FAISS index from file
+db = FAISS.load_local("faiss-index", embeddings, allow_dangerous_deserialization=True)
 
-# Define the user's question
-query = "Who is Odysseus' wife?"
 
 # Retrieve relevant documents based on the query
 retriever = db.as_retriever(
-    search_type="similarity_score_threshold",
-    search_kwargs={"k": 3, "score_threshold": 0.4},
+    search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.4}
 )
-relevant_docs = retriever.invoke(query)
+relevant_docs = retriever.invoke("Odysseus")
 
 # Display the relevant results with metadata
 print("\n--- Relevant Documents ---")

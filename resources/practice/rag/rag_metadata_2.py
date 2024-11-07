@@ -6,7 +6,7 @@ from langchain_community.vectorstores import FAISS
 load_dotenv()
 current_dir = os.path.dirname(os.path.abspath(__file__))
 db_dir = os.path.join(current_dir, "db")
-persistent_directory = os.path.join(db_dir, "faiss_db_with_metadata")
+persistent_directory = os.path.join(db_dir, "faiss_db_for_metadata")
 
 embeddings = MistralAIEmbeddings(model="mistral-embed")
 

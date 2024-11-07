@@ -5,21 +5,20 @@ from langchain_mistralai import MistralAIEmbeddings
 from langchain_community.vectorstores import FAISS
 
 load_dotenv()
+current_dir = os.path.dirname(os.path.abspath(__file__))
+db_dir = os.path.join(current_dir, "db")
+persistent_directory = os.path.join(db_dir, "faiss_db_for_basics")
 
-# Load the embedding model
 embeddings = MistralAIEmbeddings(model="mistral-embed")
 
-# Load the existing FAISS index from file
-db = FAISS.load_local("faiss-index", embeddings, allow_dangerous_deserialization=True)
+db = FAISS.load_local(persistent_directory, embeddings, allow_dangerous_deserialization=True)
 
 
-# Retrieve relevant documents based on the query
 retriever = db.as_retriever(
     search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.4}
 )
-relevant_docs = retriever.invoke("Odysseus")
+relevant_docs = retriever.invoke("odyssey")
 
-# Display the relevant results with metadata
 print("\n--- Relevant Documents ---")
 for i, doc in enumerate(relevant_docs, 1):
     print(f"Document {i}:\n{doc.page_content}\n")

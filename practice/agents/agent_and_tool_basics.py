@@ -49,3 +49,17 @@ try:
     print("Response:", response)
 except Exception as e:
     print(f"An error occurred: {str(e)}")
+
+
+
+'''
+The ReAct (Reason + Act) agent works by:
+
+First reasoning about the question or input.
+Deciding on an action (such as calling the time-fetching tool).
+Generating a final response based on the action’s output.
+
+The AgentExecutor is a component in LangChain that manages the execution flow of an agent. It coordinates the agent's reasoning and action-taking processes, ensuring that each step follows the agent’s intended logic and tool usage. Here’s a deeper breakdown of what it does and why it’s helpful:
+
+
+'''
